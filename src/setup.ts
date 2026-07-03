@@ -77,7 +77,9 @@ function createScenarioContainer(scenario: any) {
 
     const clone = (template.content.cloneNode(true) as DocumentFragment).querySelector('ul')!;
     clone.setAttribute('id', `scenario-${scenario.id}`);
-    clone.querySelector('.scenario-title')!.textContent = scenario.title;
+    const $title = clone.querySelector('.scenario-title') as HTMLElement;
+    $title.textContent = scenario.title;
+    $title.title = scenario.title;
     return clone
 }
 

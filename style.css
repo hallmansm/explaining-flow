@@ -160,6 +160,16 @@
     padding-top: 0.5rem;
 }
 
+#scenarios {
+    padding: 4px;
+}
+
+.scenario-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .scenario {
     list-style: none;
     padding: 0;
