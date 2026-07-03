@@ -14,6 +14,7 @@ import { parseInput } from './parsing';
 import { Chart } from 'chart.js';
 import crosshairPlugin from './crosshair';
 import * as FormHelper from './form-helper';
+import * as Recipes from './recipes';
 import { initialize as initBoardTimeline, getState as getBoardTimelineState, restoreState as restoreBoardTimelineState } from './boardTimeline';
 
 Chart.register(crosshairPlugin);
@@ -100,14 +101,62 @@ function parseScenario(event: Event) {
   return Scenario(parse(event.target as HTMLFormElement));
 }
 
+const $field = (id: string) => document.getElementById(id) as HTMLInputElement;
+
+function refreshRecipeDropdown() {
+  const $select = document.getElementById('recipe-select') as HTMLSelectElement | null;
+  if (!$select) return;
+  $select.innerHTML = '<option value="">pick one…</option>';
+  Recipes.all().forEach(recipe => {
+    const option = document.createElement('option');
+    option.value = recipe.name;
+    option.textContent = recipe.name;
+    $select.appendChild(option);
+  });
+}
+
+function fillFormFromRecipe(name: string) {
+  const recipe = Recipes.find(name);
+  if (!recipe) return;
+  $field('scenario-name').value = recipe.name;
+  $field('workload').value = recipe.workload;
+  $field('workers').value = recipe.workers;
+  $field('wip-limit').value = recipe.wipLimit;
+  $field('numberOfStories').value = recipe.numberOfStories;
+  $field('random').checked = recipe.random;
+}
+
+function saveRecipeFromForm() {
+  Recipes.upsert({
+    name: $field('scenario-name').value.trim(),
+    workload: $field('workload').value,
+    workers: $field('workers').value,
+    wipLimit: $field('wip-limit').value,
+    numberOfStories: $field('numberOfStories').value,
+    random: $field('random').checked,
+  });
+  refreshRecipeDropdown();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const form = FormHelper.initialize();
+
+    refreshRecipeDropdown();
+
+    document.getElementById('recipe-select')!
+      .addEventListener('change', (event: Event) => {
+        fillFormFromRecipe((event.target as HTMLSelectElement).value);
+      });
+
+    document.getElementById('clear-runs')!
+      .addEventListener('click', () => window.location.reload());
 
     document.getElementById('new-scenario')!
       .addEventListener('submit', (event: Event) => {
         event.preventDefault()
         if(!form?.isValid()) return;
 
+        saveRecipeFromForm();
         const scenario = parseScenario(event);
         const $container = createScenarioContainer(scenario);
         const $scenarios = document.getElementById('scenarios')!;
