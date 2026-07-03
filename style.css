@@ -156,6 +156,10 @@
 
 
 
+#stats {
+    padding-top: 0.5rem;
+}
+
 .scenario {
     list-style: none;
     padding: 0;

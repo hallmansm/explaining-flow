@@ -85,7 +85,7 @@ function parse(form: HTMLFormElement) {
   const field = (fieldName: string) => (form.querySelector(`[name="${fieldName}"]`) as HTMLInputElement).value;
 
   return parseInput({
-      title: field('workload'),
+      title: field('scenario-name').trim() || field('workload'),
       workers: field('workers'),
       workload: field('workload'),
       wipLimit: field('wip-limit'),
