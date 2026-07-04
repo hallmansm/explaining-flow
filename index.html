@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>Flow simulation</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script type="module" crossorigin src="/explaining-flow/assets/index-BCvvqQrf.js"></script>
-  <link rel="stylesheet" crossorigin href="/explaining-flow/assets/index-DojAM_Kh.css">
+  <script type="module" crossorigin src="/explaining-flow/assets/index-lutC2Q_u.js"></script>
+  <link rel="stylesheet" crossorigin href="/explaining-flow/assets/index-v2mKEVOK.css">
 </head>
 <body>
 <header class="navbar sticky-top p-2 shadow">
@@ -69,6 +69,15 @@
             </div>
 
             <div class="col-auto">
+                <div class="input-group">
+                    <div class="input-group-text">Team member cost</div>
+                    <input class="form-control" type="number" id="memberCost" name="memberCost" value="100000"
+                           step="10000" min="0" style="max-width: 8.5rem"
+                           title="Annual cost per team member — each run's price tag is headcount × this">
+                </div>
+            </div>
+
+            <div class="col-auto">
                 <button id="clear-runs" class="btn btn-outline-secondary" type="button" title="Clear all runs and charts; saved recipes are kept">Clear</button>
             </div>
         </form>
@@ -81,6 +90,7 @@
         <div id="scenarios" class="d-flex flex-nowrap overflow-auto">
             <ul class="scenario legend col col-1">
                 <li class="scenario-title">&nbsp;</li>
+                <li class="teamCost">Team cost</li>
                 <li class="throughput">Throughput</li>
                 <li class="leadtime">Cycle Time</li>
                 <li class="wip">WIP</li>
@@ -116,6 +126,7 @@
 <template id="scenario-template">
     <ul class="scenario instance col col-1">
         <li class="scenario-title"></li>
+        <li class="teamCost"></li>
         <li class="throughput"></li>
         <li class="leadtime"></li>
         <li class="wip"></li>
