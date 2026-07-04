@@ -83,7 +83,7 @@ function createScenarioContainer(scenario: any) {
     $title.title = scenario.title;
     // Price tag: headcount × cost-per-member, snapshotted at Run time.
     const headcount = (scenario.workers || []).length;
-    const costPerMember = parseFloat((document.getElementById('memberCost') as HTMLInputElement)?.value) || 0;
+    const costPerMember = parseMoney((document.getElementById('memberCost') as HTMLInputElement)?.value);
     const $cost = clone.querySelector('.teamCost') as HTMLElement;
     $cost.textContent = '$' + (headcount * costPerMember).toLocaleString('en-US');
     $cost.title = `${headcount} people × $${costPerMember.toLocaleString('en-US')} each`;
@@ -108,6 +108,9 @@ function parseScenario(event: Event) {
 }
 
 const $field = (id: string) => document.getElementById(id) as HTMLInputElement;
+
+// "$100,000" -> 100000; tolerant of any mix of digits, $, commas, spaces.
+const parseMoney = (s: string | undefined) => Number(String(s || '').replace(/[^0-9.]/g, '')) || 0;
 
 function refreshRecipeDropdown() {
   const $select = document.getElementById('recipe-select') as HTMLSelectElement | null;
@@ -149,6 +152,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     Recipes.seedDefaults();
     refreshRecipeDropdown();
+
+    // Keep the cost field looking like money: "$100,000" no matter what gets typed.
+    const $cost = document.getElementById('memberCost') as HTMLInputElement;
+    $cost.addEventListener('change', () => {
+      $cost.value = '$' + parseMoney($cost.value).toLocaleString('en-US');
+    });
 
     const $recipeSelect = document.getElementById('recipe-select') as HTMLSelectElement;
     const $deleteRecipe = document.getElementById('delete-recipe') as HTMLButtonElement;
