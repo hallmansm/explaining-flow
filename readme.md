@@ -9,11 +9,11 @@ The measurements you get for each simulation are:
 Stakeholders and customers typically worry about throughput and cycle time. Throughput indicates how efficient a team is. Cycle Time indicates how long stakeholders have to wait for their ideas to be implemented, once work starts.
 
 ## Using the simulator
-You can use the [online simulator](https://michelgrootjans.github.io/explaining-flow/)
+You can use the [online simulator](https://hallmansm.github.io/explaining-flow/) (this fork, with scenario names and saved recipes — [Michel Grootjans' original](https://github.com/michelgrootjans/explaining-flow) is the upstream project)
 
 ...or you can run it locally:
 ```shell
-git clone git@github.com:michelgrootjans/explaining-flow.git
+git clone https://github.com/hallmansm/explaining-flow.git
 cd explaining-flow
 npm install
 npm run dev
