@@ -38,9 +38,11 @@ Back to the original seven people. One change, costing zero dollars: no more tha
 
 ### 6. Cross-skilling only — the second free lever
 
-Original seven again, unlimited WIP, but now every person carries **two skills** (po+qa, ui+dev, dev+qa, …). No hires — the same humans, more versatile.
+Original seven again, unlimited WIP, but now every person carries **two skills** — and the pairings are *pointed at the work*: dev is half of every story's effort, so four of the seven carry dev (dev+ui, dev+ui, dev+qa, dev+po, ui+po, ui+qa, qa+po). No hires — the same humans, more versatile, aimed where the demand is.
 
 **Watch:** the handoff blocking dissolves. When a story needs a tester and the tester is busy, someone else who *can* test picks it up — work routes to the best available person instead of waiting for the one designated specialist. Idle time converts directly into flow.
+
+**The trap worth knowing:** the pointing is not optional. Deal the same fourteen skill-slots out *without* watching where the work is (dev stuck at 3-of-7 coverage while dev is 50% of the demand) and this lever goes negative — busier than the specialist team and slower, because the scarce dev-capable people keep getting captured by other columns' work. Cross-training that doesn't add capacity at the constraint is a gym membership for the wrong muscle. Try it: rebuild the roster as `po+qa, po+ui, ui+dev, ui+qa, dev+ui, dev+qa, qa+ui` and watch a "free lever" lose to doing nothing.
 
 ### 7. Cut Batch only — the third free lever
 
