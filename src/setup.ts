@@ -81,6 +81,12 @@ function createScenarioContainer(scenario: any) {
     const $title = clone.querySelector('.scenario-title') as HTMLElement;
     $title.textContent = scenario.title;
     $title.title = scenario.title;
+    // Price tag: headcount × cost-per-member, snapshotted at Run time.
+    const headcount = (scenario.workers || []).length;
+    const costPerMember = parseFloat((document.getElementById('memberCost') as HTMLInputElement)?.value) || 0;
+    const $cost = clone.querySelector('.teamCost') as HTMLElement;
+    $cost.textContent = '$' + (headcount * costPerMember).toLocaleString('en-US');
+    $cost.title = `${headcount} people × $${costPerMember.toLocaleString('en-US')} each`;
     return clone
 }
 

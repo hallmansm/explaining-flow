@@ -69,6 +69,15 @@
             </div>
 
             <div class="col-auto">
+                <div class="input-group">
+                    <div class="input-group-text">Team member cost</div>
+                    <input class="form-control" type="number" id="memberCost" name="memberCost" value="100000"
+                           step="10000" min="0" style="max-width: 8.5rem"
+                           title="Annual cost per team member — each run's price tag is headcount × this">
+                </div>
+            </div>
+
+            <div class="col-auto">
                 <button id="clear-runs" class="btn btn-outline-secondary" type="button" title="Clear all runs and charts; saved recipes are kept">Clear</button>
             </div>
         </form>
@@ -81,6 +90,7 @@
         <div id="scenarios" class="d-flex flex-nowrap overflow-auto">
             <ul class="scenario legend col col-1">
                 <li class="scenario-title">&nbsp;</li>
+                <li class="teamCost">Team cost</li>
                 <li class="throughput">Throughput</li>
                 <li class="leadtime">Cycle Time</li>
                 <li class="wip">WIP</li>
@@ -116,6 +126,7 @@
 <template id="scenario-template">
     <ul class="scenario instance col col-1">
         <li class="scenario-title"></li>
+        <li class="teamCost"></li>
         <li class="throughput"></li>
         <li class="leadtime"></li>
         <li class="wip"></li>

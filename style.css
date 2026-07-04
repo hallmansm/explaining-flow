@@ -200,6 +200,12 @@
     font-weight: bold;
 }
 
+.teamCost {
+    background-color: rgba(46, 125, 74, 0.1);
+    border: rgb(46, 125, 74) solid 1px;
+    font-weight: bold;
+}
+
 .throughput {
     background-color: rgba(54, 162, 235, 0.1);
     border: rgb(54, 162, 235) solid 1px;
