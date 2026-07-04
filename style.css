@@ -168,6 +168,10 @@
        the page — the board below stays put no matter how big a team gets. */
     max-height: 480px;
     overflow-y: auto;
+    /* Columns must size to their CONTENT, not stretch to the frame: the
+       default flex stretch capped each ul's box at 480px, so the selection
+       outline stopped mid-list while the worker rows overflowed past it. */
+    align-items: flex-start;
 }
 
 .scenario-title {
