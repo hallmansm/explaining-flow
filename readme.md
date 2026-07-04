@@ -16,17 +16,55 @@ The three obey [Little's law](https://en.wikipedia.org/wiki/Little%27s_law) (`WI
 
 ## The Banana Software Company experiment series
 
-The Recipe dropdown ships pre-loaded with eleven scenarios. They're a sequence, not a grab bag — run them in order and you get the whole argument:
+The Recipe dropdown ships pre-loaded with eleven scenarios. They're a sequence, not a grab bag — pick each one, press Run, and read the walkthrough below as you go. Every scenario exists to answer one question, and the columns accumulate in the stats table so you can compare as you climb.
 
-| # | Recipe | The question it answers |
-|---|--------|------------------------|
-| 1 | **Base Team** | The baseline: 7 people (po, 2×ui, 3×dev, qa), specialists only, unlimited WIP. Watch the queues form between roles. |
-| 2–4 | **2x / 4x / 8x People** | "We need more people." Buy the same team twice, four times, eight times over. Throughput rises — but divide it by payroll and watch **throughput-per-expense** fall. Capacity scales linearly; coordination doesn't. |
-| 5 | **WIP throttling only** | One free change: cap work in flight at 7. Same people, same cost. Cycle time drops hard; throughput barely moves. |
-| 6 | **Cross-skilling only** | One free change: every person carries a second skill. Handoffs stop blocking; idle time converts to flow. |
-| 7 | **Cut Batch only** | One free change: halve the story size (twice the stories). Smaller batches, faster feedback, smoother flow. |
-| 8–10 | **WIP + cross-skill + batch combos** | The free levers together — two skills, then three skills, then full-stack, each with WIP capped and batches cut. In typical runs the combos **beat the 2x-payroll team on throughput and crush it on cycle time — at 1x cost.** This is the point of the whole series. |
-| 11 | **Base Team (noVar)** | The control: baseline with variability off. Compare against #1 to see what randomness alone costs — queues form even when averages say they shouldn't. |
+### 1. Base Team — the org chart everyone starts with
+
+Seven people: a product owner, two UI designers, three developers, one tester. Each story needs all four specialties in order (po → ui → dev → qa), work per story averages po: 2, ui: 4, dev: 8, qa: 2, and nothing limits how much gets started. This is a completely normal, reasonably staffed team — which is the point.
+
+**Watch:** queues pile up between the specialties while everyone stays busy. Cycle time runs far beyond the ~16 days of actual work per story, because most of a story's life is spent waiting for the *next* specialist, not being worked. These are the baseline numbers everything else has to beat.
+
+### 2–4. 2x, 4x, 8x People — buying capacity
+
+The reflexive fix: "we need more people." These three scenarios buy the exact same team again — twice over, four times, eight times. Payroll scales perfectly linearly.
+
+**Watch:** throughput rises, but never by the multiple you paid for — divide throughput by team cost and **throughput-per-expense falls with every hire**. And the queues never leave; they just get bigger absolute numbers flowing into them. Capacity was never the constraint, so buying capacity buys disappointment at scale. This is the strategy the rest of the series competes against.
+
+### 5. WIP throttling only — the first free lever
+
+Back to the original seven people. One change, costing zero dollars: no more than 7 stories may be in flight at once — when the board is full, nobody starts anything new; they finish something instead.
+
+**Watch:** cycle time collapses while throughput barely moves. The work didn't speed up — the *waiting* was cut, because the queue between specialties was self-inflicted inventory. Stop starting, start finishing, priced: free.
+
+### 6. Cross-skilling only — the second free lever
+
+Original seven again, unlimited WIP, but now every person carries **two skills** (po+qa, ui+dev, dev+qa, …). No hires — the same humans, more versatile.
+
+**Watch:** the handoff blocking dissolves. When a story needs a tester and the tester is busy, someone else who *can* test picks it up — work routes to the best available person instead of waiting for the one designated specialist. Idle time converts directly into flow.
+
+### 7. Cut Batch only — the third free lever
+
+Original seven, specialists, unlimited WIP — but every story is sliced in half (work per item drops to po: 1, ui: 2, dev: 4, qa: 1, and there are twice as many items for the same total work).
+
+**Watch:** the same amount of work flows noticeably smoother in smaller pieces. Queues form later and drain faster, feedback arrives sooner, and variance hurts less because each individual item risks less. Nothing about the team changed — only the size of the units of work.
+
+### 8–10. The combos — stacking all three levers
+
+Now the levers get combined, and the only thing that climbs from scenario to scenario is **how many skills each person carries**:
+
+- **WIP + cx2 skill + batch** — two-skilled people, WIP capped at 7, stories cut in half
+- **WIP + cx3 skill + batch** — three-skilled people, same cap, same small batches
+- **WIP + fullstack + batch** — four-skilled people (every skill), same cap, same batches
+
+**Watch:** each rung of the skill ladder raises throughput and tightens cycle time further, because every additional skill per person removes another class of "waiting for the right specialist." Then put the final column next to **2x People**: in typical runs the full combo **matches or beats the double-payroll team on throughput and crushes it on cycle time — with the original seven people.** That comparison is the entire series in one glance: the levers that cost nothing outperform the lever that cost a second payroll.
+
+### 11. Base Team (noVar) — the control
+
+The baseline team once more, but with Variable work switched off: every task takes exactly its average. Compare against scenario 1.
+
+**Watch:** how much better everything runs on *identical averages*. The difference between this and scenario 1 is the pure cost of randomness — queues form under variability even when the arithmetic says they shouldn't, which is why plans built on averages fail. (Goldratt called it dependent events plus statistical fluctuations; your Gantt chart calls it nothing, which is the problem.)
+
+---
 
 Recipes are saved in your browser (localStorage): edit one and re-run under the same name to update it, hit **×** to delete one, name a new configuration to add your own. Clearing them is permanent for your browser — fresh visitors always start with the full set.
 
