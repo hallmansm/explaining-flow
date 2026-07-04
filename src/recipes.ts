@@ -9,6 +9,23 @@ export type Recipe = {
 
 const KEY = 'explaining-flow.recipes';
 
+// The Banana Software Company demo set — baked in so a fresh visitor gets a
+// ready-made lecture series. Seeded only on first visit (see seedDefaults):
+// deleting them stores '[]', which is respected — they don't resurrect.
+const DEFAULT_RECIPES: Recipe[] = [
+  { name: 'Base Team', workload: 'po: 2, ui: 4, dev: 8, qa: 2', workers: 'po, ui, ui, dev, dev, dev, qa', wipLimit: '', numberOfStories: '100', random: true },
+  { name: '2x People', workload: 'po: 2, ui: 4, dev: 8, qa: 2', workers: 'po, ui, ui, dev, dev, dev, qa, po, ui, ui, dev, dev, dev, qa', wipLimit: '', numberOfStories: '100', random: true },
+  { name: '4x People', workload: 'po: 2, ui: 4, dev: 8, qa: 2', workers: 'po, ui, ui, dev, dev, dev, qa, po, ui, ui, dev, dev, dev, qa, po, ui, ui, dev, dev, dev, qa, po, ui, ui, dev, dev, dev, qa', wipLimit: '', numberOfStories: '100', random: true },
+  { name: '8x People', workload: 'po: 2, ui: 4, dev: 8, qa: 2', workers: 'po, ui, ui, dev, dev, dev, qa, po, ui, ui, dev, dev, dev, qa, po, ui, ui, dev, dev, dev, qa, po, ui, ui, dev, dev, dev, qa, po, ui, ui, dev, dev, dev, qa, po, ui, ui, dev, dev, dev, qa, po, ui, ui, dev, dev, dev, qa, po, ui, ui, dev, dev, dev, qa', wipLimit: '', numberOfStories: '100', random: true },
+  { name: 'WIP throttling only', workload: 'po: 2, ui: 4, dev: 8, qa: 2', workers: 'po, ui, ui, dev, dev, dev, qa', wipLimit: '7', numberOfStories: '100', random: true },
+  { name: 'Cross-skilling only', workload: 'po: 2, ui: 4, dev: 8, qa: 2', workers: 'po+qa, po+ui, ui+dev, ui+qa, dev+ui, dev+qa, qa+ui', wipLimit: '', numberOfStories: '100', random: true },
+  { name: 'Cut Batch only', workload: 'po: 1, ui: 2, dev: 4, qa: 1', workers: 'po, ui, ui, dev, dev, dev, qa', wipLimit: '', numberOfStories: '200', random: true },
+  { name: 'WIP + cx2 skill + batch', workload: 'po: 1, ui: 2, dev: 4, qa: 1', workers: 'po+qa, po+ui, ui+dev, ui+qa, dev+ui, dev+qa, qa+ui', wipLimit: '7', numberOfStories: '200', random: true },
+  { name: 'WIP + cx3 skill + batch', workload: 'po: 1, ui: 2, dev: 4, qa: 1', workers: 'po+qa+ui, po+ui+dev, ui+dev+po, ui+qa+po, dev+ui+qa, dev+qa+po, qa+ui+dev', wipLimit: '7', numberOfStories: '200', random: true },
+  { name: 'WIP + fullstack + batch', workload: 'po: 1, ui: 2, dev: 4, qa: 1', workers: 'fullstack, fullstack, fullstack, fullstack, fullstack, fullstack, fullstack', wipLimit: '7', numberOfStories: '200', random: true },
+  { name: 'Base Team (noVar)', workload: 'po: 2, ui: 4, dev: 8, qa: 2', workers: 'po, ui, ui, dev, dev, dev, qa', wipLimit: '', numberOfStories: '100', random: false },
+];
+
 const load = (): Recipe[] => {
   try {
     return JSON.parse(localStorage.getItem(KEY) || '[]');
@@ -34,4 +51,9 @@ const upsert = (recipe: Recipe) => {
 
 const remove = (name: string) => save(load().filter(r => r.name !== name));
 
-export { all, find, upsert, remove };
+// First visit only: the key has never been written, so bake in the demo set.
+const seedDefaults = () => {
+  if (localStorage.getItem(KEY) === null) save(DEFAULT_RECIPES);
+};
+
+export { all, find, upsert, remove, seedDefaults, DEFAULT_RECIPES };

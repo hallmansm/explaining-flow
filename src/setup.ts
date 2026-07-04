@@ -141,6 +141,7 @@ function saveRecipeFromForm() {
 document.addEventListener('DOMContentLoaded', () => {
     const form = FormHelper.initialize();
 
+    Recipes.seedDefaults();
     refreshRecipeDropdown();
 
     const $recipeSelect = document.getElementById('recipe-select') as HTMLSelectElement;
