@@ -143,10 +143,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     refreshRecipeDropdown();
 
-    document.getElementById('recipe-select')!
-      .addEventListener('change', (event: Event) => {
-        fillFormFromRecipe((event.target as HTMLSelectElement).value);
-      });
+    const $recipeSelect = document.getElementById('recipe-select') as HTMLSelectElement;
+    const $deleteRecipe = document.getElementById('delete-recipe') as HTMLButtonElement;
+
+    $recipeSelect.addEventListener('change', (event: Event) => {
+      const name = (event.target as HTMLSelectElement).value;
+      fillFormFromRecipe(name);
+      $deleteRecipe.disabled = !name;
+    });
+
+    $deleteRecipe.addEventListener('click', () => {
+      const name = $recipeSelect.value;
+      if (!name) return;
+      Recipes.remove(name);
+      refreshRecipeDropdown();
+      $recipeSelect.value = '';
+      $deleteRecipe.disabled = true;
+    });
 
     document.getElementById('clear-runs')!
       .addEventListener('click', () => window.location.reload());
