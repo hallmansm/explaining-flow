@@ -5,10 +5,24 @@ import { test, expect, Page } from '@playwright/test';
 //   A) DOM ghost   — scenario marked done, but a card remains in a live queue
 //   B) preview up  — #board-preview visible instead of the live board
 //   C) logical strand — run never reaches done
-test.use({ baseURL: 'http://localhost:5273' });
+test.use({ baseURL: process.env.STRESS_BASE_URL || 'http://localhost:5273' });
+
+const BASE = 'po, ui, ui, dev, dev, dev, qa';
+const teamX = (n: number) => Array(n).fill(BASE).join(', ');
 
 async function runRecipe(page: Page, recipeName: string, wiggle: boolean, runIndex: number) {
-  await page.selectOption('#recipe-select', recipeName);
+  if (recipeName.startsWith('scale:')) {
+    const n = parseInt(recipeName.slice(6));
+    await page.fill('#scenario-name', `${n}x custom`);
+    await page.fill('#workload', 'po: 2, ui: 4, dev: 8, qa: 2');
+    await page.fill('#workers', teamX(n));
+    await page.fill('#wip-limit', '');
+    await page.fill('#numberOfStories', '100');
+    const checked = await page.locator('#random').isChecked();
+    if (!checked) await page.locator('#random').click();
+  } else {
+    await page.selectOption('#recipe-select', recipeName);
+  }
   await page.click('#create-scenario');
   await page.waitForSelector('.scenario.instance.selected', { timeout: 10000 });
 
@@ -72,9 +86,8 @@ test('hunt stuck cards across repeated runs', async ({ page }) => {
 
   const verdicts: string[] = [];
   const plan: Array<[string, boolean]> = [
-    ['Base Team', true], ['Base Team', false], ['Base Team', true],
-    ['WIP throttling only', true], ['Cross-skilling only', true],
-    ['Base Team', true], ['WIP + cx2 skill + batch', true], ['Base Team', false],
+    ['8x People', false], ['8x People', false], ['scale:16', false],
+    ['8x People', true], ['scale:16', false], ['8x People', false],
   ];
   for (let i = 0; i < plan.length; i++) {
     verdicts.push(await runRecipe(page, plan[i][0], plan[i][1], i));

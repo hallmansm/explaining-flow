@@ -4,10 +4,14 @@ import Scenario from '../src/scenario';
 import { LimitBoardWip } from '../src/strategies';
 import { parseInput } from '../src/parsing';
 
+const BASE = 'po, ui, ui, dev, dev, dev, qa';
+const times = (n: number) => Array(n).fill(BASE).join(', ');
 const RECIPES = [
-  { name: 'Base Team', workload: 'po: 2, ui: 4, dev: 8, qa: 2', workers: 'po, ui, ui, dev, dev, dev, qa', wipLimit: '', numberOfStories: '30', random: true },
-  { name: 'WIP throttling only', workload: 'po: 2, ui: 4, dev: 8, qa: 2', workers: 'po, ui, ui, dev, dev, dev, qa', wipLimit: '7', numberOfStories: '30', random: true },
+  { name: 'Base Team', workload: 'po: 2, ui: 4, dev: 8, qa: 2', workers: BASE, wipLimit: '', numberOfStories: '30', random: true },
+  { name: 'WIP throttling only', workload: 'po: 2, ui: 4, dev: 8, qa: 2', workers: BASE, wipLimit: '7', numberOfStories: '30', random: true },
   { name: 'Cross-skilling only', workload: 'po: 2, ui: 4, dev: 8, qa: 2', workers: 'dev+ui, dev+ui, dev+qa, dev+po, ui+po, ui+qa, qa+po', wipLimit: '', numberOfStories: '30', random: true },
+  { name: '8x People', workload: 'po: 2, ui: 4, dev: 8, qa: 2', workers: times(8), wipLimit: '', numberOfStories: '100', random: true },
+  { name: '16x People', workload: 'po: 2, ui: 4, dev: 8, qa: 2', workers: times(16), wipLimit: '', numberOfStories: '100', random: true },
 ];
 
 describe('stranded card hunt', () => {
