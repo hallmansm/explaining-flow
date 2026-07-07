@@ -95,3 +95,24 @@ test('hunt stuck cards across repeated runs', async ({ page }) => {
   console.log('VERDICTS:', JSON.stringify(verdicts));
   expect(verdicts.every(v => v === 'clean')).toBe(true);
 });
+
+test('WIP limit is never exceeded (max WIP stat <= limit)', async ({ page }) => {
+  test.setTimeout(600000);
+  await page.goto('/');
+  await page.waitForSelector('#create-scenario');
+  const maxes: number[] = [];
+  for (let i = 0; i < 4; i++) {
+    await page.selectOption('#recipe-select', 'WIP + cx2 skill + batch');
+    await page.click('#create-scenario');
+    await page.waitForSelector('.scenario.instance.selected', { timeout: 10000 });
+    await page.waitForSelector('.scenario.instance.selected.done', { timeout: 120000 });
+    const wipText = await page.locator('.scenario.instance.selected .wip').textContent();
+    // renderWip shows "avg (max N)" when max differs from avg, else just the avg
+    const m = wipText?.match(/max\s+([\d.]+)/);
+    const maxWip = m ? parseFloat(m[1]) : parseFloat(wipText || '0');
+    maxes.push(maxWip);
+    console.log(`wip-run ${i}: stat="${wipText}" max=${maxWip}`);
+  }
+  console.log('MAXES:', JSON.stringify(maxes));
+  expect(maxes.every(v => v <= 7)).toBe(true);
+});

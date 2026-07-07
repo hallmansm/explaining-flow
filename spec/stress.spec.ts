@@ -43,3 +43,33 @@ describe('stranded card hunt', () => {
     });
   });
 });
+
+describe('WIP limit conformance', () => {
+  beforeEach(PubSub.clearAllSubscriptions);
+  beforeEach(jest.useFakeTimers);
+
+  it('never exceeds the configured WIP limit, even during bursts', () => {
+    for (let i = 0; i < 100; i++) {
+      PubSub.clearAllSubscriptions();
+      let inFlight = 0, maxInFlight = 0;
+      PubSub.subscribe('workitem.started', () => { inFlight++; if (inFlight > maxInFlight) maxInFlight = inFlight; });
+      PubSub.subscribe('workitem.finished', () => { inFlight--; });
+
+      const wipLimiter = LimitBoardWip();
+      const scenario = Scenario(parseInput({
+        title: 'WIP throttling only', workload: 'po: 2, ui: 4, dev: 8, qa: 2',
+        workers: 'po, ui, ui, dev, dev, dev, qa', wipLimit: '7', numberOfStories: '30', random: true,
+      }));
+      wipLimiter.initialize(scenario.wipLimit);
+      const board = scenario.run();
+      jest.advanceTimersByTime(1000 * 60 * 60);
+      jest.runAllTimers();
+
+      expect(board.done()).toBe(true);
+      if (maxInFlight > 7) {
+        console.log(`RUN ${i}: WIP limit 7 exceeded, max in flight = ${maxInFlight}`);
+        expect(maxInFlight).toBeLessThanOrEqual(7);
+      }
+    }
+  });
+});
