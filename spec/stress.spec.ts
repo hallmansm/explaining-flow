@@ -1,0 +1,41 @@
+// TEMP stress harness: hunt for stranded cards in mid-board queues.
+import PubSub from 'pubsub-js';
+import Scenario from '../src/scenario';
+import { LimitBoardWip } from '../src/strategies';
+import { parseInput } from '../src/parsing';
+
+const RECIPES = [
+  { name: 'Base Team', workload: 'po: 2, ui: 4, dev: 8, qa: 2', workers: 'po, ui, ui, dev, dev, dev, qa', wipLimit: '', numberOfStories: '30', random: true },
+  { name: 'WIP throttling only', workload: 'po: 2, ui: 4, dev: 8, qa: 2', workers: 'po, ui, ui, dev, dev, dev, qa', wipLimit: '7', numberOfStories: '30', random: true },
+  { name: 'Cross-skilling only', workload: 'po: 2, ui: 4, dev: 8, qa: 2', workers: 'dev+ui, dev+ui, dev+qa, dev+po, ui+po, ui+qa, qa+po', wipLimit: '', numberOfStories: '30', random: true },
+];
+
+describe('stranded card hunt', () => {
+  beforeEach(PubSub.clearAllSubscriptions);
+  beforeEach(jest.useFakeTimers);
+
+  RECIPES.forEach(recipe => {
+    it(`${recipe.name}: no cards stranded over 150 runs`, () => {
+      for (let i = 0; i < 150; i++) {
+        PubSub.clearAllSubscriptions();
+        const wipLimiter = LimitBoardWip();
+        const scenario = Scenario(parseInput({ title: recipe.name, ...recipe }));
+        wipLimiter.initialize(scenario.wipLimit);
+        const board = scenario.run();
+
+        // Drain: advance far beyond any plausible total duration.
+        jest.advanceTimersByTime(1000 * 60 * 60);
+        jest.runAllTimers();
+
+        if (!board.done()) {
+          const state = board.columns().map((c: any) => ({
+            name: c.name, type: c.type, count: c.size(),
+            items: c.items().map((it: any) => ({ id: it.id, work: it.work }))
+          })).filter((c: any) => c.type !== 'done' && c.count > 0);
+          console.log(`RUN ${i} STRANDED in ${recipe.name}:`, JSON.stringify(state, null, 1));
+          expect(board.done()).toBe(true); // fail loudly
+        }
+      }
+    });
+  });
+});
