@@ -60,6 +60,12 @@ Now the levers get combined, and the only thing that climbs from scenario to sce
 
 **Watch:** each rung of the skill ladder raises throughput and tightens cycle time further, because every additional skill per person removes another class of "waiting for the right specialist." Then put the final column next to **2x People**: in typical runs the full combo **matches or beats the double-payroll team on throughput and crushes it on cycle time — with the original seven people.** That comparison is the entire series in one glance: the levers that cost nothing outperform the lever that cost a second payroll.
 
+### 12–18. The stage ladder — how many handoffs?
+
+Seven more recipes, added after the series: eight people and 16 units of work per story in every one, and the only thing that changes is how many stages a story crosses. 8 stages x 1 person splits each specialty in two (po1, po2, ui1, ui2, dev1, dev2, qa1, qa2). 4 stages x 2 pooled is the normal four columns with two people each. 2 stages x 4 pooled merges them into front (po + ui) and back (dev + qa). 1 stage x 8 generalists is one column. The three (WIP 8) variants cap work in flight at one story per person.
+
+**Watch:** 8 to 4 barely moves, because dev stays the lone bottleneck at 97 percent while po and qa idle. 4 to 2 lifts throughput by half, and 2 to 1 roughly doubles it from where the ladder started while cutting cycle time to a tenth, with the same eight people. Collapsing stages pays exactly as much as it rebalances load at the constraint, and no more. The recorded run: throughput 0.22, 0.24, 0.36, 0.47; cycle time 176, 168, 69, 16 days.
+
 ### 11. Base Team (noVar) — the control
 
 The baseline team once more, but with Variable work switched off: every task takes exactly its average. Compare against scenario 1.

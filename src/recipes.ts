@@ -24,7 +24,25 @@ const DEFAULT_RECIPES: Recipe[] = [
   { name: 'WIP + cx3 skill + batch', workload: 'po: 1, ui: 2, dev: 4, qa: 1', workers: 'po+ui+dev, po+ui+dev, ui+dev+qa, ui+dev+qa, po+dev+qa, po+ui+qa, po+ui+dev', wipLimit: '7', numberOfStories: '200', random: true },
   { name: 'WIP + fullstack + batch', workload: 'po: 1, ui: 2, dev: 4, qa: 1', workers: 'fullstack, fullstack, fullstack, fullstack, fullstack, fullstack, fullstack', wipLimit: '7', numberOfStories: '200', random: true },
   { name: 'Base Team (noVar)', workload: 'po: 2, ui: 4, dev: 8, qa: 2', workers: 'po, ui, ui, dev, dev, dev, qa', wipLimit: '', numberOfStories: '100', random: false },
+  // The stage ladder (added 2026-10-24): eight people and 16 units of work per
+  // story in every rung; only the number of handoffs changes.
+  { name: '8 stages x 1 person', workload: 'po1: 1, po2: 1, ui1: 2, ui2: 2, dev1: 4, dev2: 4, qa1: 1, qa2: 1', workers: 'po1, po2, ui1, ui2, dev1, dev2, qa1, qa2', wipLimit: '', numberOfStories: '100', random: true },
+  { name: '4 stages x 2 pooled', workload: 'po: 2, ui: 4, dev: 8, qa: 2', workers: 'po, po, ui, ui, dev, dev, qa, qa', wipLimit: '', numberOfStories: '100', random: true },
+  { name: '2 stages x 4 pooled', workload: 'front: 6, back: 10', workers: 'front, front, front, front, back, back, back, back', wipLimit: '', numberOfStories: '100', random: true },
+  { name: '1 stage x 8 generalists', workload: 'all: 16', workers: 'all, all, all, all, all, all, all, all', wipLimit: '', numberOfStories: '100', random: true },
+  { name: '8 stages x 1 person (WIP 8)', workload: 'po1: 1, po2: 1, ui1: 2, ui2: 2, dev1: 4, dev2: 4, qa1: 1, qa2: 1', workers: 'po1, po2, ui1, ui2, dev1, dev2, qa1, qa2', wipLimit: '8', numberOfStories: '100', random: true },
+  { name: '4 stages x 2 pooled (WIP 8)', workload: 'po: 2, ui: 4, dev: 8, qa: 2', workers: 'po, po, ui, ui, dev, dev, qa, qa', wipLimit: '8', numberOfStories: '100', random: true },
+  { name: '2 stages x 4 pooled (WIP 8)', workload: 'front: 6, back: 10', workers: 'front, front, front, front, back, back, back, back', wipLimit: '8', numberOfStories: '100', random: true },
 ];
+
+// Bump when recipes are added to DEFAULT_RECIPES. Returning visitors get the
+// additions appended; recipes they deleted from earlier versions stay deleted.
+const SEED_VERSION = 2;
+const SEED_KEY = 'explaining-flow.recipes.seedVersion';
+const ADDED_IN: Record<number, string[]> = {
+  2: ['8 stages x 1 person', '4 stages x 2 pooled', '2 stages x 4 pooled', '1 stage x 8 generalists',
+      '8 stages x 1 person (WIP 8)', '4 stages x 2 pooled (WIP 8)', '2 stages x 4 pooled (WIP 8)'],
+};
 
 const load = (): Recipe[] => {
   try {
@@ -51,9 +69,26 @@ const upsert = (recipe: Recipe) => {
 
 const remove = (name: string) => save(load().filter(r => r.name !== name));
 
-// First visit only: the key has never been written, so bake in the demo set.
+// First visit: the key has never been written, so bake in the whole demo set.
+// Later visits: append only the recipes added since the version this browser
+// last saw, so earlier deletions are respected.
 const seedDefaults = () => {
-  if (localStorage.getItem(KEY) === null) save(DEFAULT_RECIPES);
+  if (localStorage.getItem(KEY) === null) {
+    save(DEFAULT_RECIPES);
+  } else {
+    const seen = Number(localStorage.getItem(SEED_KEY) || '1');
+    const recipes = load();
+    for (let v = seen + 1; v <= SEED_VERSION; v++) {
+      for (const name of ADDED_IN[v] || []) {
+        if (!recipes.some(r => r.name === name)) {
+          const recipe = DEFAULT_RECIPES.find(r => r.name === name);
+          if (recipe) recipes.push(recipe);
+        }
+      }
+    }
+    save(recipes);
+  }
+  localStorage.setItem(SEED_KEY, String(SEED_VERSION));
 };
 
 export { all, find, upsert, remove, seedDefaults, DEFAULT_RECIPES };
